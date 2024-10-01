@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형 웹 </title>
+<!--    <link rel="stylesheet" href="../static/css/style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Axios 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <!-- <header></header> -->
+    <div class="wrapper">
+        <div class="cover">
+            <div class="cover-slides">
+<!--                <img src="../static/images/cover1.png">-->
+                <img src="{{ url_for('static', filename='images/cover1.png') }}">
+            </div>
+            <div class="cover-title">
+                <h1>
+                    Python<br/>
+                    <strong>Crawling</strong>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- main은 전체 페이지 중에서 단 하나만 있을 수 있는 마크업-->
+    <main class="contents">
+        <div class="wrapper">
+            <div class="no-grid">
+                <form id="searchForm">
+                    <select id="select-box">
+<!--                        <option value="1">광고</option>-->
+<!--                        <option value="2">쇼츠</option>-->
+<!--                        <option value="3">영상</option>-->
+                        <option value="100">정치</option>
+                        <option value="101">경제</option>
+                        <option value="102">사회</option>
+                        <option value="103">생활/문화</option>
+                        <option value="105">IT/과학</option>
+                    </select>
+                    <input type="text" id="text-input" name="text-input" placeholder="Enter text here">
+                    <button id="crawlingButton"> 검색 </button>
+                </form>
+            </div>
+            <div id="grid-div" class="grid">
+            </div>
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- <footer></footer> -->
+    <!-- main.js 파일 불러오기 -->
+    <script src="{{ url_for('static', filename = 'js/main.js') }}"></script>
+</body>
+</html>
