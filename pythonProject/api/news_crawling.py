@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # BeautifulSoup 모듈을 호출
 import requests
 
 
@@ -16,31 +16,43 @@ def naver_news_it(news_type):
 
     # Naver 뉴스 URL을 구성
     url=f'https://news.naver.com/main/list.naver?mode=LSD&mid=sec&sid1={news_type}'
+    # 해당 URL로 GET 요청을 보내고 응답 받기
     res = requests.get(url)
-    source = res.text
-    soup = BeautifulSoup(source,'html.parser')
-    #제목
+    source = res.text # 응답 텍스트를 가져옴
+    soup = BeautifulSoup(source,'html.parser') # BeautifulSoup으로 HTML을 파싱
+
+    # 뉴스 제목의 선택자를 입력하여 데이터 가져오기
     titles=soup.select('#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dt:nth-child(2) > a')
-    titles_new=[]
+    titles_new=[] # 제목을 저장할 리스트
     for a in titles:
         titles_new.append((a.get_text().strip(),a['href']))
-    #이미지 주소
+
+    # 뉴스 이미지의 선택자를 입력하여 이미지 정보 가져오기
     images = soup.select('#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dt.photo > a > img')
-    images_new = []
+    images_new = [] # 이미지를 저장할 리스트
+
+    # 선택된 이미지 주소를 순회하며 추출
     for img in images:
         images_new.append(img.get('src'))
-    #신문사
+
+    # 신문사의 선택자를 입력하여 신문사 정보 가져오기
     companies = soup.select(
         '#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dd > span.writing')
-    companies_new = []
-    for span in companies:
-        companies_new.append(span.get_text())
-    #요약
-    summary=soup.select('#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dd > span')
-    summary_new = []
-    for span in summary:
-        summary_new.append(span.get_text())
+    companies_new = [] # 신문사를 저장할 리스트
 
+    # 선택된 신무사 이름을 순회하며 추출
+    for span in companies:
+        companies_new.append(span.get_text()) # 신문사 이름 저장
+
+    # 뉴스 요약의 선택자로 요약 정보 가져오기
+    summary=soup.select('#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dd > span')
+    summary_new = [] # 요약을 저장할 리스트
+
+    # 선택된 요약을 순회하며 추출
+    for span in summary:
+        summary_new.append(span.get_text()) # 요약 저장
+
+    # 최종적으로 제목, 링크, 이미지, 요약, 신문사 정보를 포함하는 딕셔너리 리스트를 반환
     return [
         {
             'title': title,
@@ -49,7 +61,7 @@ def naver_news_it(news_type):
             'summary': summary,
             'company': company
         }
-        for (title, link), image, summary, company in zip(titles_new, images_new, summary_new, companies_new)
+        for (title, link), image, summary, company in zip(titles_new, images_new, summary_new, companies_new) # 각 리스트에서 데이터 추출
     ]
 
 
