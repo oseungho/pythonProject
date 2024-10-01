@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); // 폼 기본 제출 동작 방지
         console.log("클릭 이벤트 발생");
 
+        // 로딩 스피너 동작
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        loadingSpinner.style.display = 'block'; // 로딩 스피너 보이기
+
         // 현재 활성화된 탭 확인
         const activeTab = document.querySelector('.tab-content.active');
         const searchType = activeTab.querySelector('.select-box').value; // 선택한 타입 값 가져오기
@@ -44,9 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('검색어를 입력해주세요.');
                 return;
             }
-
-            // 모달창 보이기
-            document.getElementById('myModal').style.display = 'block';
 
             axios.get(`/youtube`, {
                 params: {
@@ -79,14 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('오류 발생:', error);
             })
             .finally(() => {
-                // 모달창 숨기기
-                closeModal();
+                loadingSpinner.style.display = 'none'; // 로딩 스피너 숨기기
             });
         }
     });
 
     function collectNaverNews(searchType) {
-        document.getElementById('myModal').style.display = 'block'; // 모달창 보이기
         fetch(`http://127.0.0.1:5000/news?searchtype=${searchType}`)
             .then(response => {
                 if (!response.ok) {
@@ -128,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // URL 수정하여 고화질 이미지 요청
                     // imageUrl이 유효한지 확인한 후 URL 수정
                     if (item.imageUrl) {
-                        const highQualityImageUrl = item.imageUrl.replace(/type=ofullfill\d+_\d+/, 'type=ofullfill1068_720');
+                        const highQualityImageUrl = item.imageUrl.replace(/type=\w+\d+_\d+/, 'type=ofullfill1068_720');
                         img.src = highQualityImageUrl; // 이미지 주소
                     } else {
                         img.src = 'default_image_url.jpg'; // 기본 이미지 URL (없을 경우)
@@ -164,13 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('오류 발생:', error);
             })
             .finally(() => {
-                // 모달창 숨기기
-                closeModal();
+                loadingSpinner.style.display = 'none'; // 로딩 스피너 숨기기
             });
-    }
-
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
     }
 
     // 탭 클릭 이벤트 등록

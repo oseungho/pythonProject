@@ -37,10 +37,6 @@ api.add_resource(newsCrawling, '/news')
 def index():
     return render_template('index.html')
 
-@app.route('/naver')
-def news():
-    return render_template('frontend.html')
-
 if __name__ == '__main__':
     # app.run(debug=True)
     app.run(host='0.0.0.0', port=5000)

@@ -14,7 +14,7 @@ class newsCrawling(Resource):
 
 def naver_news_it(news_type):
 
-    #for sid in sids:
+    # Naver 뉴스 URL을 구성
     url=f'https://news.naver.com/main/list.naver?mode=LSD&mid=sec&sid1={news_type}'
     res = requests.get(url)
     source = res.text

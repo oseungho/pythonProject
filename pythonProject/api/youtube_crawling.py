@@ -40,7 +40,7 @@ def youtube_crawling(search, searchtype):
         # 웹드라이버를 위한 Service 객체 생성
         service = Service(executable_path=driver_path)
         options = webdriver.ChromeOptions() # Chrome 브라우저의 옵션 설정 객체 생성
-        #options.add_argument("--headless")  # headless 모드 설정 -> 주석을 해제 시, 원격 제어 브라우저 창이 보이지 않음
+        options.add_argument("--headless")  # headless 모드 설정 -> 주석을 해제 시, 원격 제어 브라우저 창이 보이지 않음
         options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")  # 사용자 에이전트 설정
         # 에이전트 설정을 하는 이유?
         # 자동화된 스크립트나 봇을 차단하기 위해 브라위저의 기본 사용자 에이전트를 검사할 수 있어서 위 코드를 통해 차단 우회

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>반응형 웹 </title>
-    <!--    <link rel="stylesheet" href="../static/css/style.css">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- Axios 라이브러리 로드 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -14,7 +13,6 @@
 <div class="wrapper">
     <div class="cover">
         <div class="cover-slides">
-            <!--                <img src="../static/images/cover1.png">-->
             <img src="{{ url_for('static', filename='images/cover1.png') }}">
         </div>
         <div class="cover-title">
@@ -59,8 +57,12 @@
                 <button id="crawlingButton">검색</button>
             </div>
         </form>
-<!--        <div id="youtubeResults"></div>-->
-        <div id="grid-div"></div>
+
+        <div id="grid-div"> <!-- youtube 크롤링의 결과셋은 해당 div에서 표시-->
+            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+        </div>
+
+        <!-- 네이버 뉴스 크롤링에 대한 값은 해당 부분에 뿌려주기-->
         <div id="naverResults">
             <div id="naver-articles" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;"></div> <!-- 기사 목록을 위한 div -->
         </div>
@@ -72,20 +74,6 @@
     </div>
 </main>
 
-<!-- 모달창 HTML -->
-<div id="myModal" class="modal fade" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">로딩 중...</h4>
-                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>뉴스를 수집 중입니다...</p>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- <footer></footer> -->
 <!-- main.js 파일 불러오기 -->
