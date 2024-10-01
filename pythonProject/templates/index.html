@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형 웹 </title>
+    <!--    <link rel="stylesheet" href="../static/css/style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Axios 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<!-- <header></header> -->
+<div class="wrapper">
+    <div class="cover">
+        <div class="cover-slides">
+            <!--                <img src="../static/images/cover1.png">-->
+            <img src="{{ url_for('static', filename='images/cover1.png') }}">
+        </div>
+        <div class="cover-title">
+            <h1>
+                Python<br/>
+                <strong>Crawling</strong>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<!-- main은 전체 페이지 중에서 단 하나만 있을 수 있는 마크업-->
+<main class="contents">
+    <div class="wrapper">
+        <div class="no-grid">
+            <ul class="tabs">
+                <li class="tab active" onclick="showTab('youtube')">유튜브 크롤링</li>
+                <li class="tab" onclick="showTab('naver')">네이버 뉴스 크롤링</li>
+            </ul>
+        </div>
+        <!-- 통합된 폼 -->
+        <form class="searchForm">
+            <div id="youtube" class="tab-content active">
+                <select class="select-box" name="youtubeType">
+                    <option value="1">광고</option>
+                    <option value="2">쇼츠</option>
+                    <option value="3">영상</option>
+                </select>
+                <input type="text" class="text-input" name="youtubeInput" placeholder="Enter YouTube search query">
+                <button id="youtubeButton">검색</button>
+            </div>
+
+            <div id="naver" class="tab-content">
+                <select class="select-box" name="naverType">
+                    <option value="100">정치</option>
+                    <option value="101">경제</option>
+                    <option value="102">사회</option>
+                    <option value="103">생활/문화</option>
+                    <option value="105">IT/과학</option>
+                </select>
+                <input type="text" class="text-input" name="naverInput" placeholder="Enter text here">
+                <button id="crawlingButton">검색</button>
+            </div>
+        </form>
+<!--        <div id="youtubeResults"></div>-->
+        <div id="grid-div"></div>
+        <div id="naverResults">
+            <div id="naver-articles" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;"></div> <!-- 기사 목록을 위한 div -->
+        </div>
+
+        </div>
+        <div id="loading" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</main>
+
+<!-- 모달창 HTML -->
+<div id="myModal" class="modal fade" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">로딩 중...</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>뉴스를 수집 중입니다...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <footer></footer> -->
+<!-- main.js 파일 불러오기 -->
+<script src="{{ url_for('static', filename = 'js/main.js') }}"></script>
+</body>
+</html>
