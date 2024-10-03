@@ -5,6 +5,7 @@ from flask_cors import CORS # Cross-Origin Resource Sharing을 처리하기 위�
 from .routes import bp # 블루프린트를 import
 from api.youtube_crawling import youtubeCrawling
 from api.news_crawling import newsCrawling
+from api.news_crawling_bs4 import bs4_newsCrawling
 
 # 2. 사용자 정의함수 생성
 def create_app():
@@ -19,6 +20,7 @@ def create_app():
     api = Api(app)
     api.add_resource(youtubeCrawling, '/youtube')
     api.add_resource(newsCrawling, '/news')
+    api.add_resource(bs4_newsCrawling, '/news_bs4')
 
     # 6. 애플리케이션에 블루프린트 등록
     app.register_blueprint(bp)
