@@ -50,9 +50,15 @@ def youtube_crawling(search, searchtype):
         options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(service=service, options=options) # Chrome 브라우저를 실행하는 WebDriver 객체 생성
 
+        # 명시적 대기(Explicit Wait)
+        wait = WebDriverWait(driver, 10)
+
+        # 암시적 대기 설정: 최대 10초 동안 대기
+        driver.implicitly_wait(10)
+
         # 2.브라우저에 네이버 페이지 로딩하기
         driver.get('https://www.youtube.com/')
-        time.sleep(3)  # 페이지가 완전히 로딩되도록 3초동안 기다림
+        # time.sleep(3)  # 페이지가 완전히 로딩되도록 3초동안 기다림
 
         # 검색 박스 요소를 찾기 위한 XPATH
         search_box = driver.find_element(By.XPATH,'//*[@id="search-input"]/input')
@@ -65,7 +71,10 @@ def youtube_crawling(search, searchtype):
         print(f'type에 따른 실행함수 분기 - {searchtype}, class : {type(searchtype)}')
         if(searchtype == 1):
             print('광고 정보를 크롤링합니다.')
-            info_list = driver.find_elements(By.XPATH, '//*[@id="sparkles-body"]')
+            # info_list = driver.find_elements(By.XPATH, '//*[@id="sparkles-body"]')
+
+            # presence_of_all_elements_located는 여러 요소가 DOM에 로드되어있는지 확인
+            info_list = wait.until(EC.presence_of_all_elements_located(By.XPATH, '//*[@id="sparkles-body"]'))
             info_result = advertisement_crawling(info_list)
         elif (searchtype == 2):
             print('쇼츠 정보를 크롤링합니다.')
@@ -91,6 +100,7 @@ def youtube_crawling(search, searchtype):
 def advertisement_crawling(info_list):
     advertisement_dic = {}
     print('수집 값 :', info_list)
+
     index = 1
     for ad in info_list:
         ad_title = ad.find_element(By.XPATH, './h3').text

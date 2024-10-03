@@ -34,3 +34,5 @@ class youtubeCrawling(Resource): # from flask_restful import Resource 추가
         get -> request.args.get('')
         post -> request.json['']
 """
+
+
