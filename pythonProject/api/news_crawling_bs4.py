@@ -66,6 +66,18 @@ def naver_news_it(news_type):
     for span in summary:
         summary_new.append(span.get_text())  # 요약 저장
 
+    # 뉴스의 날짜 정보 가져오기
+    date_1 = soup.select(
+        '#main_content > div.list_body.newsflash_body > ul.type06_headline > li > dl > dd > span.date.is_new')
+    date_2 = soup.select(
+        '#main_content > div.list_body.newsflash_body > ul.type06 > li > dl > dd > span.date.is_new')
+    date = date_1 + date_2
+    date_new = []
+
+    for span in date:
+        date_new.append(span.get_text())
+
+
     # 최종적으로 제목, 링크, 이미지, 요약, 신문사 정보를 포함하는 딕셔너리 리스트를 반환
     return [
         {
@@ -73,9 +85,10 @@ def naver_news_it(news_type):
             'link': link,
             'imageUrl': image,
             'summary': summary,
-            'company': company
+            'company': company,
+            'date':date
         }
-        for (title, link), image, summary, company in zip(titles_new, images_new, summary_new, companies_new)
+        for (title, link), image, summary, company, date in zip(titles_new, images_new, summary_new, companies_new, date_new)
         # 각 리스트에서 데이터 추출
     ]
 

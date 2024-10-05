@@ -33,12 +33,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchType = activeTab.querySelector('.select-box').value; // 선택한 타입 값 가져오기
 
         console.log('searchType : ', searchType);
+            // 네이버 탭인 경우
+            if (activeTab.id === 'naver') {
+                // 크롤링 시작하기 전에 숫자값을 전달받았는지 유효성 검사
+                const input_value = activeTab.querySelector('.text-input').value;
 
-        // 네이버 탭인 경우
-        if (activeTab.id === 'naver') {
-            // 검색 타입만 사용
-            collectNaverNews(searchType);
-        } else {
+                // 검색어가 비어 있는지 검사
+                if (!input_value.trim()) {
+                    alert('검색어를 입력해주세요.');
+                    loadingSpinner.style.display = 'none'; // 로딩 스피너 숨기기
+                    return;
+                }
+
+                // 숫자가 아닌 입력을 검사
+                if (!/^\d+$/.test(input_value)) {  // 숫자만 허용
+                    alert('숫자만 입력해주세요.');
+                    loadingSpinner.style.display = 'none'; // 로딩 스피너 숨기기
+                    return;
+                }
+                // 검색 타입만 사용
+                const searchText = activeTab.querySelector('.text-input').value; // 입력된 텍스트 값 가져오기
+                collectNaverNews(searchType, searchText, 1);
+            } else if(activeTab.id === 'naver_bs4'){
+
+                collectNaverNews(searchType, 0, 2);
+            }else {
             // 유튜브 검색 로직
             const searchText = activeTab.querySelector('.text-input').value; // 입력된 텍스트 값 가져오기
 
@@ -85,8 +104,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function collectNaverNews(searchType) {
-        fetch(`http://127.0.0.1:5000/news?searchtype=${searchType}`)
+    // 숫자만 입력될 수 있도록 실시간 필터링
+//    document.getElementById('naverInput').addEventListener('input', function() {
+//        this.value = this.value.replace(/[^0-9]/g, ''); // 숫자 이외의 문자 제거
+//    });
+
+    function collectNaverNews(searchType, searchText, tab_type) {
+        let url = '';
+
+        // 조건에 맞게 URL 선택
+        if (tab_type == 1) {
+            url = `http://127.0.0.1:5000/news?searchtype=${searchType}&searchText=${searchText}`;
+        } else {
+            url = `http://127.0.0.1:5000/news_bs4?searchtype=${searchType}`;
+        }
+
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -106,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.forEach(item => {
                     // item의 구조가 올바른지 확인
-                    if (!item.title || !item.link || !item.imageUrl || !item.summary) {
+                    if (!item.title || !item.link || !item.imageUrl || !item.summary || !item.company || !item.date) {
                         console.error('Invalid item structure:', item);
                         return; // 잘못된 구조면 넘어감
                     }
@@ -148,9 +181,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     p.setAttribute('class', "card-text");
                     p.textContent = item.summary; // 요약
 
+                    // 신문사
+                    const companySpan = document.createElement('span');
+                    companySpan.setAttribute('class', 'company-name')
+                    companySpan.textContent = item.company;
+
+                    // 날짜
+                    const dateSpan = document.createElement('span');
+                    dateSpan.setAttribute('class', 'date');
+                    dateSpan.textContent = item.date; // 날짜
+
+                    // 신문사와 날짜를 같은 줄에 배치
+                    const companyAndDateContainer = document.createElement('div');
+                    companyAndDateContainer.setAttribute('class', 'company-and-date');
+                    companyAndDateContainer.appendChild(dateSpan);
+                    companyAndDateContainer.appendChild(companySpan);
+
                     // 요소들 결합
                     cardBody.appendChild(h4);
                     cardBody.appendChild(p);
+                    cardBody.appendChild(companyAndDateContainer); // 신문사와 날짜를 포함한 컨테이너
                     a.appendChild(img);
                     card.appendChild(a);
                     card.appendChild(cardBody);

@@ -30,7 +30,8 @@
         <div class="no-grid">
             <ul class="tabs">
                 <li class="tab active" onclick="showTab('youtube')">유튜브 크롤링</li>
-                <li class="tab" onclick="showTab('naver')">네이버 뉴스 크롤링</li>
+                <li class="tab" onclick="showTab('naver_bs4')">네이버 뉴스 크롤링 <br/>(beautifulSoup)</li>
+                <li class="tab" onclick="showTab('naver')">네이버 뉴스 크롤링 <br/>(Selenium + beautifulSoup)</li>
             </ul>
         </div>
         <!-- 통합된 폼 -->
@@ -45,6 +46,17 @@
                 <button id="youtubeButton">검색</button>
             </div>
 
+            <div id="naver_bs4" class="tab-content">
+                <select class="select-box" name="naverType" style="flex:1;">
+                    <option value="100">정치</option>
+                    <option value="101">경제</option>
+                    <option value="102">사회</option>
+                    <option value="103">생활/문화</option>
+                    <option value="105">IT/과학</option>
+                </select>
+                <button id="crawlingButton_bs4">검색</button>
+            </div>
+
             <div id="naver" class="tab-content">
                 <select class="select-box" name="naverType">
                     <option value="100">정치</option>
@@ -53,7 +65,7 @@
                     <option value="103">생활/문화</option>
                     <option value="105">IT/과학</option>
                 </select>
-                <input type="text" class="text-input" name="naverInput" placeholder="Enter text here">
+                <input type="text" class="text-input" name="naverInput" placeholder="Enter Crawling page Number">
                 <button id="crawlingButton">검색</button>
             </div>
         </form>

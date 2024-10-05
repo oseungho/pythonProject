@@ -21,6 +21,7 @@ from flask_restful import Api # Flask 애플리케이션에서 RESTful API를 �
 from flask_cors import CORS # Cross-Origin Resource Sharing을 처리하기 위해서 호출
 from api.youtube_crawling import youtubeCrawling
 from api.news_crawling import newsCrawling
+from api.news_crawling_bs4 import bs4_newsCrawling
 
 
 # 플라스크 애플리케이션 생성
@@ -31,6 +32,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 api.add_resource(youtubeCrawling, '/youtube')
 api.add_resource(newsCrawling, '/news')
+api.add_resource(bs4_newsCrawling, '/news_bs4')
 
 # 기본 경로('/')로 접속했을 때 index.html을 보여주는 라우트
 @app.route('/')
