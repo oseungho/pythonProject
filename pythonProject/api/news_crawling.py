@@ -1,4 +1,4 @@
-# 1. 패키지
+# 1. 패키지 호출하기
 import os # 운영 체제와 상호작용하는 기능을 제공하는 모듈
 from selenium.webdriver.chrome.service import Service # Chrome 웹드라이버 서비스를 위한 클래스
 from flask import request
@@ -9,7 +9,7 @@ from selenium import webdriver # Selenium의 웹드라이버 클래스
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-
+# 2. 클래스 정의하기
 class newsCrawling(Resource):
     def get(self):
         news_type = request.args.get('searchtype')
@@ -20,6 +20,7 @@ class newsCrawling(Resource):
         print(f'실행 결과 - {results}')
         return results
 
+# 3. 크롤링 함수 정의하기
 def naver_news_it(news_type, news_pages):
 
     try:
@@ -30,8 +31,9 @@ def naver_news_it(news_type, news_pages):
         service = Service(executable_path=driver_path)
         options = webdriver.ChromeOptions()  # Chrome 브라우저의 옵션 설정 객체 생성
         options.add_argument("--headless")  # headless 모드 설정 -> 주석을 해제 시, 원격 제어 브라우저 창이 보이지 않음
+        # 사용자 에이전트 설정
         options.add_argument(
-            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")  # 사용자 에이전트 설정
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
         options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(service=service, options=options)  # Chrome 브라우저를 실행하는 WebDriver 객체 생성
 
@@ -48,6 +50,7 @@ def naver_news_it(news_type, news_pages):
         # 모든 창을 종료하고 세션 종료
         driver.quit()
 
+# 4. 동적으로 페이지를 넘어가며 크롤링하는 함수 정의하기
 def repeat_crawling(driver, page_count):
     titles_new = []
     images_new = []
