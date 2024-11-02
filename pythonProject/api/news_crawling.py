@@ -104,18 +104,16 @@ def repeat_crawling(driver, page_count):
         date_new += [span.get_text() for span in date]
 
         # 각 리스트에 데이터가 얼마나 들어있는지 출력
-        print(f"페이지 {page}에서 수집된 데이터 개수:")
-        print(f"  제목: {len(titles_new)}개")
-        print(f"  이미지: {len(images_new)}개")
-        print(f"  신문사: {len(companies_new)}개")
-        print(f"  요약: {len(summary_new)}개")
-        print(f"  날짜: {len(date_new)}개")
+        print(f"""페이지 {page}에서 수집된 데이터 개수:
+                  제목: {len(titles_new)}개, 이미지: {len(images_new)}개, 신문사: {len(companies_new)}개, 
+                  요약: {len(summary_new)}개, 날짜: {len(date_new)}개""")
 
         next_btn = soup.select(f'#main_content > div.paging > a:nth-child({page+1})')
         if next_btn:
             try:
                 # Selenium으로 '다음 페이지 버튼을 클릭'
-                next_button_element = driver.find_element(By.CSS_SELECTOR, f'#main_content > div.paging > a:nth-child({page+1})')
+                next_button_element = driver.find_element(By.CSS_SELECTOR,
+                                                          f'#main_content > div.paging > a:nth-child({page+1})')
                 next_button_element.click()
 
                 # JavaScript로 페이지의 로딩 상태를 확인하는 방법
@@ -131,6 +129,7 @@ def repeat_crawling(driver, page_count):
                 break
         else:
             break
+
     # 크롤링한 데이터 반환
     return [
         {
@@ -141,5 +140,6 @@ def repeat_crawling(driver, page_count):
             'company': company,
             'date': date
         }
-        for (title, link), image, summary, company, date in zip(titles_new, images_new, summary_new, companies_new, date_new)
+        for (title, link), image, summary, company, date in
+        zip(titles_new, images_new, summary_new, companies_new, date_new)
     ]
