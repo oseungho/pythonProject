@@ -70,25 +70,18 @@
             </div>
         </form>
 
-        <div id="loadingSpinner" style="display: none;">
-            <div class="spinner"></div>
-        </div>
-
         <div id="grid-div"> <!-- youtube 크롤링의 결과셋은 해당 div에서 표시-->
-            Youtude 결과 뿌려줄 위치
-        </div>
-
-        <div id="bs4_Results" style="display : none">
-            <div id="naver-articles_bs4" style="margin-top:30px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;"></div> <!-- 기사 목록을 위한 div -->
-            bs4 결과를 뿌려줄 위치
+            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
         </div>
 
         <!-- 네이버 뉴스 크롤링에 대한 값은 해당 부분에 뿌려주기-->
-        <div id="naverResults" style="display : none">
+        <div id="naverResults">
             <div id="naver-articles" style="margin-top:30px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;"></div> <!-- 기사 목록을 위한 div -->
-            naverResults 결과 뿌려줄 위치 활성화
         </div>
 
+        </div>
+        <div id="loading" style="display: none;">
+            <div class="spinner"></div>
         </div>
     </div>
 </main>

@@ -74,7 +74,7 @@ def youtube_crawling(search, searchtype):
             # info_list = driver.find_elements(By.XPATH, '//*[@id="sparkles-body"]')
 
             # presence_of_all_elements_located는 여러 요소가 DOM에 로드되어있는지 확인
-            info_list = wait.until(EC.presence_of_all_elements_located(By.XPATH, '//*[@id="sparkles-body"]'))
+            info_list = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="sparkles-body"]')))
             info_result = advertisement_crawling(info_list)
         elif (searchtype == 2):
             print('쇼츠 정보를 크롤링합니다.')

@@ -10,30 +10,6 @@ function showTab(tabName) {
     const selectedTab = document.getElementById(tabName);
     selectedTab.classList.add('active');
 
-    // # grid-div 보이기 (youtube 탭인 경우)
-    const gridDiv = document.getElementById('grid-div');
-    if (tabName === 'youtube') {
-        gridDiv.style.display = 'block'; // 유튜브 탭이 선택된 경우 grid-div를 보이게 함
-    } else {
-        gridDiv.style.display = 'none'; // 다른 탭이 선택된 경우 grid-div를 숨김
-    }
-
-    // # bs4_Results 보이기 (naver_bs4 탭인 경우)
-    const bs4Div = document.getElementById('bs4_Results');
-    if (tabName === 'naver_bs4') {
-        bs4Div.style.display = 'block'; // naver_bs4 탭이 선택된 경우, 보이게 함
-    } else {
-        bs4Div.style.display = 'none'; // 다른 탭이 선택된 경우 naver_bs4를 숨김
-    }
-
-    // # naverResults 보이기 (naver 탭인 경우)
-    const naverDiv = document.getElementById('naverResults');
-    if (tabName === 'naver') {
-        naverDiv.style.display = 'block'; // naver_bs4 탭이 선택된 경우, 보이게 함
-    } else {
-        naverDiv.style.display = 'none'; // 다른 탭이 선택된 경우 naver를 숨김
-    }
-
     // 현재 활성화된 버튼 상태 변경
     const tabButtons = document.querySelectorAll('.tab');
     tabButtons.forEach(tab => {
@@ -152,9 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 console.log(data); // 데이터 구조 확인
-//                const naverArticles = document.querySelector('#naver-articles');
-                // ID 동적 설정
-                const naverArticles = document.querySelector(`#naver-articles${tab_type === 1 ? '' : '_bs4'}`); // tab_type에 따라 ID 설정
+                const naverArticles = document.querySelector('#naver-articles');
                 naverArticles.innerHTML = ''; // 기존 내용 제거
 
                 // 데이터가 배열인지 확인
