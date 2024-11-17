@@ -111,8 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         adElement.classList.add('grid-item');
                         adElement.innerHTML = `
                             <div class="grid-item-contents">
-                                <h2>${data.title}</h2>
+                                <a href=${data.href}><h2>${data.title}</h2></a>
                                 <p>${data.description}</p>
+                                <img src=${data.image}></img>
                             </div>
                         `;
                         gridDiv.appendChild(adElement);

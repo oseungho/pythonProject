@@ -3,6 +3,8 @@ pip install selenium
 '''
 
 import os # 운영 체제와 상호작용하는 기능을 제공하는 모듈
+from time import sleep
+
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.common import NoSuchElementException, TimeoutException # Selenium의 예외 클래스
@@ -58,7 +60,7 @@ def youtube_crawling(search, searchtype):
 
         # 2.브라우저에 네이버 페이지 로딩하기
         driver.get('https://www.youtube.com/')
-        # time.sleep(3)  # 페이지가 완전히 로딩되도록 3초동안 기다림
+        time.sleep(5)  # 페이지가 완전히 로딩되도록 3초동안 기다림
 
         # 검색 박스 요소를 찾기 위한 XPATH
         search_box = driver.find_element(By.XPATH,'//*[@id="search-input"]/input')
@@ -69,24 +71,9 @@ def youtube_crawling(search, searchtype):
         time.sleep(5)
 
         print(f'type에 따른 실행함수 분기 - {searchtype}, class : {type(searchtype)}')
-        if(searchtype == 1):
-            print('광고 정보를 크롤링합니다.')
-            # info_list = driver.find_elements(By.XPATH, '//*[@id="sparkles-body"]')
+        print('쇼츠 정보를 크롤링합니다.')
 
-            # presence_of_all_elements_located는 여러 요소가 DOM에 로드되어있는지 확인
-            info_list = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="sparkles-body"]')))
-            info_result = advertisement_crawling(info_list)
-        elif (searchtype == 2):
-            print('쇼츠 정보를 크롤링합니다.')
-            info_list = driver.find_elements(By.XPATH, '//*[@id="items"]/ytm-shorts-lockup-view-model-v2[*]')
-            info_result = short_crawling(info_list)
-        else:
-            print('영상 정보를 크롤링합니다.')
-            info_list = driver.find_elements(By.XPATH, '//*[@id="sparkles-body"]')
-            #'//*[@id="video-title"]'#
-            info_result = video_crawling(info_list)
-
-        print('info_result : ', info_result)
+        info_result = short_crawling(driver)
 
         return info_result
 
@@ -95,50 +82,65 @@ def youtube_crawling(search, searchtype):
         print('지정한 요소를 찾을수 없어요:', e)
 
     finally:
-        pass
-        #driver.quit() # WebDriver 종료
-def advertisement_crawling(info_list):
-    advertisement_dic = {}
-    print('수집 값 :', info_list)
+        driver.quit() # WebDriver 종료
 
-    index = 1
-    for ad in info_list:
-        ad_title = ad.find_element(By.XPATH, './h3').text
-        ad_description = ad.find_elements(By.XPATH, './div')[0].text
-        print(f'INDEX : {index}, 제목 : {ad_title}, 설명 : {ad_description}')
-
-        data = {
-            'index' : index,
-            'title' : ad_title,
-            'description' : ad_description
-        }
-
-        advertisement_dic[index] = data
-        index += 1
-    return advertisement_dic
-
-
-def short_crawling(info_list):
+def short_crawling(driver):
     short_dic = {}
+
+    # 쇼츠 정보가 담긴 요소 찾기
+    info_list = driver.find_elements(By.XPATH, '//*[@id="items"]/ytm-shorts-lockup-view-model-v2[*]')
+
     idx = 1
     for info in info_list:
-        print(f'info - {type(info)}')
-        href = info.find_element(By.XPATH, './ytm-shorts-lockup-view-model/a').get_attribute('href')
-        image = info.find_element(By.XPATH, './ytm-shorts-lockup-view-model/a/div/img').get_attribute('src')
-        title = info.find_element(By.XPATH, './ytm-shorts-lockup-view-model/div/h3/a/span').text
-        print(f'index:{idx}, title-{title}, href-{href}, image-{image}')
+        if idx > 6:
+            break
 
-        data = {
-            'index': idx,
-            'title': title,
-            'href' : href,
-            'image': image
-        }
-        short_dic[idx] = data
+        print(f'{idx} info - {type(info)}')
+
+        try:
+            href = info.find_element(By.XPATH, './ytm-shorts-lockup-view-model/a').get_attribute('href')
+            image_element = WebDriverWait(info, 30).until(
+                                EC.presence_of_element_located((By.XPATH, './ytm-shorts-lockup-view-model/a/div/img'))
+                            )
+            image = image_element.get_attribute('src')
+            title = WebDriverWait(info, 10).until(
+                EC.presence_of_element_located((By.XPATH, './ytm-shorts-lockup-view-model/div/h3/a/span'))).text
+
+            if image == "" or image is None:
+                # "다음" 버튼을 클릭하여 페이지를 전환
+                next_btn = driver.find_element(By.XPATH,                                           '//*[@id="right-arrow"]/ytd-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]')
+                next_btn.click()
+                print(f'{idx}번째라 다음 버튼을 클릭')
+
+                sleep(3)
+                image_element = WebDriverWait(info, 10).until(
+                    EC.presence_of_element_located((By.XPATH, './ytm-shorts-lockup-view-model/a/div/img'))
+                )
+                image = image_element.get_attribute('src')
+
+                # 이미지가 로드되었는지 다시 확인
+                if image == "" or image is None:
+                    print(f"이미지 로드 실패: {idx}번째 아이템")
+                else:
+                    print(f"이미지 로드 성공: {idx}번째 아이템")
+
+            print(f'index:{idx}, title-{title}, href-{href}, image-{image}')
+            data = {
+                'index': idx,
+                'title': title,
+                'href' : href,
+                'image': image
+            }
+            short_dic[idx] = data
+
+        except Exception as e:
+            # 오류 발생 시, 해당 항목을 None으로 처리하고 로그를 출력
+            print(f'오류 발생 : {idx}, Error: {str(e)}')
+            short_dic[idx] = {
+                'index':idx,
+                'title':None,
+                'href' : None,
+                'image': None
+            }
         idx += 1
     return short_dic
-
-def video_crawling(info_list):
-    video_dic = {}
-    idx = 1
-    return 0
