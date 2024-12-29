@@ -65,12 +65,15 @@ def youtube_crawling(search, searchtype):
         time.sleep(5)  # 페이지가 완전히 로딩되도록 3초동안 기다림
 
         # 검색 박스 요소를 찾기 위한 XPATH
-        search_box = driver.find_element(By.XPATH,'//*[@id="search-input"]/input')
+        search_box = driver.find_element(By.XPATH,'//*[@id="center"]/yt-searchbox/div[1]/form/input')
 
         # 검색어 입력 및 검색 버튼 클릭 시뮬레이션
         search_box.send_keys(search)
         search_box.send_keys(Keys.RETURN)
         time.sleep(5)
+
+        # 검색 결과가 로딩될 때까지 기다림 (JavaScript 동작 대기)
+        # wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="contents"]')))  # 검색 결과가 로딩되었는지 확인
 
         print(f'type에 따른 실행함수 분기 - {searchtype}, class : {type(searchtype)}')
         print('쇼츠 정보를 크롤링합니다.')
@@ -84,8 +87,8 @@ def youtube_crawling(search, searchtype):
         print('지정한 요소를 찾을수 없어요:', e)
 
     finally:
-        driver.quit() # WebDriver 종료
-
+        # driver.quit() # WebDriver 종료
+        pass
 def short_crawling(driver):
     short_dic = {}
 
@@ -110,7 +113,7 @@ def short_crawling(driver):
 
             if image == "" or image is None:
                 # "다음" 버튼을 클릭하여 페이지를 전환
-                next_btn = driver.find_element(By.XPATH,                                           '//*[@id="right-arrow"]/ytd-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]')
+                next_btn = driver.find_element(By.XPATH, '//*[@id="right-arrow"]/ytd-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]')
                 next_btn.click()
                 print(f'{idx}번째라 다음 버튼을 클릭')
 
